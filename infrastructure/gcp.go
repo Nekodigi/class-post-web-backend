@@ -3,44 +3,50 @@ package infrastructure
 import (
 	"context"
 	"encoding/json"
-	"fmt"
-	"log"
 	"net/http"
 	"os"
 
+	"github.com/Nekodigi/class-post-web-backend/config"
 	"golang.org/x/oauth2"
-	"golang.org/x/oauth2/google"
-	"google.golang.org/api/calendar/v3"
 )
 
-func getClient() *http.Client {
+func GetClient(conf *config.Config) *http.Client {
 	//ctx := context.Background()
-	b, err := os.ReadFile("credentials.json")
-	if err != nil {
-		log.Fatalf("Unable to read client secret file: %v", err)
-	}
 
-	// If modifying these scopes, delete your previously saved token.json.
-	config, err := google.ConfigFromJSON(b, calendar.CalendarReadonlyScope)
-	if err != nil {
-		log.Fatalf("Unable to parse client secret file to config: %v", err)
-	}
-	client := getClient_(config)
+	// b, err := os.ReadFile("credentials/credentials.json")
+	// if err != nil {
+	// 	log.Fatalf("Unable to read client secret file: %v", err)
+	// }
+
+	// //If modifying these scopes, delete your previously saved token.json.
+	// config, err := google.ConfigFromJSON(b, calendar.CalendarReadonlyScope)
+
+	// if err != nil {
+	// 	log.Fatalf("Unable to parse client secret file to config: %v", err)
+	// }
+
+	endpoint := &oauth2.Endpoint{AuthURL: "https://accounts.google.com/o/oauth2/auth", TokenURL: "https://oauth2.googleapis.com/token"}
+	config := &oauth2.Config{ClientID: conf.ClientId, ClientSecret: conf.ClientSecret, Endpoint: *endpoint}
+	client := getClient_(conf, config)
+
 	return client
 }
 
 // Retrieve a token, saves the token, then returns the generated client.
-func getClient_(config *oauth2.Config) *http.Client {
+func getClient_(conf *config.Config, config *oauth2.Config) *http.Client {
 	// The file token.json stores the user's access and refresh tokens, and is
 	// created automatically when the authorization flow completes for the first
 	// time.
-	tokFile := "token.json"
-	tok, err := tokenFromFile(tokFile)
-	if err != nil {
-		fmt.Errorf("No token found. check https://developers.google.com/calendar/api/quickstart/go")
-		// tok = getTokenFromWeb(config)
-		// saveToken(tokFile, tok)
-	}
+	tok := &oauth2.Token{TokenType: "authorized_user", RefreshToken: conf.RefreshToken}
+
+	// tokFile := "credentials/token.json"
+	// tok, err := tokenFromFile(tokFile)
+
+	// if err != nil {
+	// 	fmt.Errorf("No token found. check https://developers.google.com/calendar/api/quickstart/go")
+	// 	// tok = getTokenFromWeb(config)
+	// 	// saveToken(tokFile, tok)
+	// }
 	return config.Client(context.Background(), tok)
 }
 
