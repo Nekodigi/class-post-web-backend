@@ -27,7 +27,7 @@ func init() {
 
 	client := infrastructure.GetClient(conf)
 
-	spreadsheetId := "1BeddTk5XSxR6Kg1iPUVnp_yB_QdBLxnfmwnf3XSH8do"
+	spreadsheetId := conf.SheetId
 	//TODO
 	//calendarId := "1nm497i6vlgj0fc0o16hms2vts@group.calendar.google.com"
 

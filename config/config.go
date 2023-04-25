@@ -13,6 +13,7 @@ type Config struct {
 	ProjectId    string
 	RefreshToken string
 	ClientSecret string
+	SheetId      string
 }
 
 var config *Config
@@ -34,6 +35,7 @@ func Load() *Config {
 
 			RefreshToken: os.Getenv("REFRESH_TOKEN"),
 			ClientSecret: os.Getenv("CLIENT_SECRET"),
+			SheetId:      os.Getenv("SHEET_ID"),
 		}
 	}
 	fmt.Printf("LOAD CONFIG:%v", config)

@@ -101,7 +101,7 @@ func (c *Calendar) CalendarUpdate() {
 		fmt.Println("title, date, assign")
 		for _, row := range resp.Values {
 			//* required!
-			if len(row) <= 2 || row[0] == nil || row[1] == nil {
+			if len(row) < 2 || row[0] == nil || row[1] == nil {
 				continue
 			}
 
@@ -124,12 +124,12 @@ func (c *Calendar) CalendarUpdate() {
 			if oldEvent != nil {
 				// fs.DeleteEvent(oldEvent.Id)
 				// calendarSrv.DeleteEvent(oldEvent.Id)
-				fmt.Println("omit create")
+				//fmt.Println("omit create")
 			} else {
 				event = c.CalendarSrv.AddEvent(event)
 				c.Fs.AddEvent(event)
 			}
-			fmt.Printf("%s, %s, %s\n", row[0], date.String(), row[3])
+			//fmt.Printf("%s, %s, %s\n", row[0], date.String(), row[3])
 		}
 
 		//* Remove unused event
