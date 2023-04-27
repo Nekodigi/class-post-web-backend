@@ -52,6 +52,8 @@ func (cld *Calendar) NewCalendar(summary string) *calendar.Calendar {
 	}
 
 	newCalendar, _ := cld.srv.Calendars.Insert(calendar_).Do()
+	scope := &calendar.AclRuleScope{Type: "default", Value: ""}
+	cld.srv.Acl.Insert(newCalendar.Id, &calendar.AclRule{Scope: scope, Role: "reader"}).Do()
 
 	fmt.Printf("New calendar created: %s\n", newCalendar.Summary)
 	cld.Id = newCalendar.Id
